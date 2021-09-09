@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script src="{{static_url('jquery.min.js')}}"></script>
+    <script src="{{static_url('talk.js')}}"></script>
+    <script src="{{static_url('emojionearea.js')}}"></script>
+    <script src="https://lf1-cdn-tos.bytegoofy.com/obj/iconpark/icons_3115_37.193e59fbdf1981bb052333263ce612e6.es5.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{static_url('style.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{static_url('emojionearea.css')}}">
+    <title>Free to Tablk !!</title>
+</head>
+<body>
+   <div class='flex' id="content_box">
+        <div id='current_login_users'>
+            <span> Current exist users</span>
+            <div class="channel_box"></div>
+        </div>
+        <div id="splitDiv"></div>
+        <div class="container" id="chat_iframe">
+            <div class="item_culom" id="item_culoms">
+                <div class="item_chat_list"></div>
+            </div>
+            <div id="chat_iframe_footer"></div>
+        </div>
+   </div>
+
+    <form id="messageFrom">
+        <div>
+            <textarea id="msg" style="width: 260px;height: 120px" placeholder="send the message to chat">
+            </textarea>
+        </div>
+        <div id="currnetUser" hidden>{{current_user}}</div>
+    </form>
+
+ 
+</body>
+</html>

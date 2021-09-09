@@ -1,0 +1,255 @@
+#inbox {
+    background-color: rgb(245,245,245);
+    height:500px;
+    overflow:auto; 
+    border:green solid 1px
+}
+.current_talk_stie_u {
+    position: fixed;
+    right: 2rem;
+    background-color: #95ec69;
+    border: 1px solid black;
+    max-width: 50%;
+    width: fit-content;
+    border-radius:3px;
+    display: block;
+}
+
+.current_talk_stie_o {
+    background-color:#fff;
+    border: 1px solid black;
+    max-width: 50%;
+    width: fit-content;
+    border-radius:3px;
+    display: block;
+}
+
+.newline {
+    margin: 1rem;
+    padding-top: 1rem;
+}
+.newline_join {
+    margin: 1rem; 
+}
+.msg_font {
+    font-size: 14px;
+    border: 0.5px solid black;
+    max-width: 200px;
+    display: inline-grid;
+    text-align: center;
+    border-radius: 5px;
+    background-color: #95ec69;
+    min-width: 60px;
+}
+.msg_font_o {
+    font-size: 14px;
+    border: 0.5px solid black;
+    max-width: 200px;
+    display: inline-grid;
+    text-align: center;
+    border-radius: 5px;
+    min-width: 60px;
+}
+.dis_cur_name {
+    display: inline;
+}
+.login_container {
+    display: grid;
+    grid-template-rows: repeat(3, 160px);
+}
+.login_container::after{
+    background-image: url('./images/bg_1.jpg');
+    background-repeat: no-repeat;
+    content: '';
+    opacity:0.3;
+    top:0;
+    left:0;
+    bottom:0;
+    right:0;
+    position:absolute;
+    background-size:cover;
+    z-index:-1;
+}
+
+.wrapper {
+    display: grid;
+    grid-template-columns: 20% 60% 20%;
+    
+  }
+.container {
+    width: 80%;
+    position: relative;
+    background-color: rgb(245,245,245);
+    border:green solid 1px;
+    height: 50vh;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+}
+.item_culom {
+    /* flex: 1; */
+    align-items: stretch;
+    display: initial;
+}
+.item_chat_list {
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows:repeat(auto-fit, 50px);
+    grid-row-gap: 20px;
+}
+
+.span-12 {
+    grid-column: 1/13;
+}
+.span-10 {
+    grid-column: 1/11;
+}
+.span-10-after {
+    grid-column: 11/12;
+    width: auto;
+    word-break: break-all;
+    white-space: normal;
+    text-align: right;
+}
+.span-11-after {
+    grid-column: 12/13;
+}
+.span-6 {
+    grid-column: 1/7;
+}
+.span-6-after {
+    grid-column: 7/13;
+}
+
+.item-single-line {
+    text-align: center;
+    align-content: center;
+}
+.msg_font_div {
+    margin: 0.3rem;
+}
+.extend_font_site {
+    text-align: initial;
+    max-width: 200px;
+    max-height: 200px;
+}
+#current_login_users {
+    width: 150px;
+    float: left;
+    height: 50vh;
+    border: 0.5px solid green;
+    border-right: unset;
+}
+#splitDiv {
+    float: left;
+    height: 50vh;
+    cursor: col-resize;
+    border-left: 1px blue solid;
+    position: relative;
+}
+#chat_iframe_footer {
+    height:50px;
+    min-height: 25px;
+}
+.exist_user_list_p {
+    margin-top: 5px;
+    margin-bottom: -6px;
+    border-top: 0.5px solid;
+    border-bottom: 0.5px solid;
+}
+#messageFrom {
+    width: 80%;
+}
+.action_bar {
+    display: grid;
+    grid-template-columns: auto;
+}
+.action_bar_spen6 {
+    display: flex;
+}
+.action_bar_spen6_6 {
+    flex:1;
+    text-align: center;
+}
+#add_actions_a {
+    cursor: pointer;
+    font-size: 24px;
+    float: right;
+}
+.actions_bar_show_div {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+}
+.comment_bar_style {
+    cursor: pointer;
+    font-size: 24px;
+    text-align: center;
+}
+.upload_files {
+    height: 30px;
+    width: 20%;
+    cursor: pointer;
+    font-size: 0px;
+    outline: medium none;
+    position: absolute;
+    filter:alpha(opacity=0);
+    -moz-opacity:0;
+    opacity:0; 
+    left:0px;
+}
+#pic_action_bar {
+    width: 100%;
+    border: 1px solid;
+}
+.upload_image_style {
+    width: auto;
+    height: auto;
+    max-width: 190px;
+    max-height: 200px;
+}
+.options_click_bg {
+    background-color: lavender;
+}
+.append_unread_meassages {
+    background-color: antiquewhite;
+}
+.span-2_login_f {
+    grid-column: 2/2;
+}
+.login_from {
+    text-align: center;
+}
+.log_icon_ifream {
+    text-align: center;
+}
+.login_logo {
+    width:10rem;
+}
+.login_input_w {
+    width:40rem;
+    margin: 10px;
+    height: 2rem;
+    font-size: 20px;
+    border-top: unset;
+    border-left: unset;
+    border-right: unset;
+    border-bottom-color: black;
+    outline: none;
+    background-color: transparent;
+}
+.login_input_w:focus {
+    border-color: #66afe9;
+}
+.login_ifream_input {
+    display: flex;
+    justify-content: center;
+}
+#enable_show_psw {
+    cursor: pointer;
+}
+#disable_hide_psw {
+    cursor: pointer;
+}
+.error_login_style {
+    border-bottom-color: red;
+}
