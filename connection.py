@@ -11,14 +11,14 @@ logger = logging.getLogger(__name__)
 
 async def connect_to_db() -> None:
         try:
-            logger.warn("--- DB CONNECTION START ---")
+            logger.warn("---😏😏 DB CONNECTION START ---")
             db =  psycopg2.connect(
                     database = POSTGRES_DB,
                     user = POSTGRES_USER,
                     password = POSTGRES_PASSWORD,
                     host = POSTGRES_SERVER,
                     port = POSTGRES_PORT)
-            logger.warn("--- DB CONNECTION SUCCESS ---")
+            logger.warn("---😘😘 **** DB connect success **** ---")
         except Exception as e:
             logger.warn("--- DB CONNECTION ERROR ---")
             logger.warn(e)
@@ -27,10 +27,10 @@ async def connect_to_db() -> None:
 
 async def close_db_connection(conn, cursor) -> None:
         try:
-            logger.warn("--- DB CLOSE START ---")
+            logger.warn("--- 😚😚DB CLOSE START ---")
             cursor.close()
             conn.close()
-            logger.warn("--- DB CLOSE SUCCESS ---")
+            logger.warn("--- 😚😚DB CLOSE SUCCESS ---")
         except Exception as e:
             logger.warn("--- DB COLOSE ERROR ---")
             logger.warn(e)

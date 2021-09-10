@@ -237,6 +237,20 @@
     outline: none;
     background-color: transparent;
 }
+
+.login_input_re {
+    width:40rem;
+    margin: 10px;
+    height: 2rem;
+    font-size: 20px;
+    border-top: unset;
+    border-left: unset;
+    border-right: unset;
+    border-bottom-color: black;
+    outline: none;
+    background-color: transparent;
+}
+
 .login_input_w:focus {
     border-color: #66afe9;
 }
@@ -252,4 +266,8 @@
 }
 .error_login_style {
     border-bottom-color: red;
+}
+.register_link_new {
+    color:black;
+    text-decoration:none;
 }

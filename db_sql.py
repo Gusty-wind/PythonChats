@@ -33,27 +33,16 @@ class StockItem(BaseModel):
     cityId: str
     prId: str
 
-class GoodsItem(BaseModel):
-    name: str
-
-class SendListernClickDatas(BaseModel):
-    action: str
-    action_date: str
-    base_Url:str
-    content:str
-    node_name: str
-    userId: str
-    userName: str
-    hostname:str
-
-class SendListernChangeDatas(BaseModel):
-    action: str
-    action_date: str
-    old_Url:str
-    new_Url:str
-    userId: str
-    userName: str
-    hostname: str
+class userName_chat(BaseModel):
+    account: str
+class responseDatas(BaseModel):
+    status:bool
+    message: str
+    account:str
+class accountDatas(BaseModel):
+    username: str
+    password: str
+    phone:str
 
 app = FastAPI()
 
@@ -88,21 +77,21 @@ async def inter_order_datas(datas, user_id):
     return order_id[0]
 
 #creat a new user
-async def inter_new_user(datas):
-    conn = await connect_to_db()
-    cursor = conn.cursor()
-    logger.warn("--- **** DB connect success **** ---")
-    logger.warn("--- **** insert one user data **** ---")
-    sql = "insert into users (name, PHONE, PROVINCE, CITY, CITYAREA, detailaddress, sfc_role) \
-             values(%s, '%s', %s, %s, %s, %s, %s) RETURNING id"
-    params = (datas.clientName, datas.phone, datas.user_address['province'][0], datas.user_address['province'][1], datas.user_address['province'][2], datas.detail_address, '10')      
-    cursor.execute(sql, params)
-    user_id = cursor.fetchone()
-    conn.commit()
-    await close_db_connection(conn, cursor)
-    logger.warn("--- **** end insert one user data **** ---")
+# async def inter_new_user(datas):
+#     conn = await connect_to_db()
+#     cursor = conn.cursor()
+#     logger.warn("--- **** DB connect success **** ---")
+#     logger.warn("--- **** insert one user data **** ---")
+#     sql = "insert into users (name, PHONE, PROVINCE, CITY, CITYAREA, detailaddress, sfc_role) \
+#              values(%s, '%s', %s, %s, %s, %s, %s) RETURNING id"
+#     params = (datas.clientName, datas.phone, datas.user_address['province'][0], datas.user_address['province'][1], datas.user_address['province'][2], datas.detail_address, '10')      
+#     cursor.execute(sql, params)
+#     user_id = cursor.fetchone()
+#     conn.commit()
+#     await close_db_connection(conn, cursor)
+#     logger.warn("--- **** end insert one user data **** ---")
 
-    return user_id[0]
+#     return user_id[0]
 #inter a new project 
 
 async def inter_new_pro(datas):
@@ -355,132 +344,59 @@ async def inter_listener_user_datas_change(datas):
     logger.warn("--- **** end insert new stock data **** ---")
     return change_id[0]
 
+# @app.get("/")
+# def read_root():
+#     return {"Hello": "World1"}
+
+# @app.get("/createdaily-report")
+# def test_root():
+#     return {"Hello": "Evan"}
+
+# @app.get("/getGoodsDatas")
+# async def get_goods_list():
+#     datas = await get_progoods_list()
+#     return (datas)
 
 
-@app.get("/")
-def read_root():
-    return {"Hello": "World1"}
-
-@app.get("/createdaily-report")
-def test_root():
-    return {"Hello": "Evan"}
-
-@app.get("/getOrderDatas")
-async def get_order_list():
-    datas = await getOrder()
-    return (datas)
-
-@app.get("/getSiteDatas")
-async def get_stock_list():
-    datas = await get_stocks_list()
-    return (datas)
-
-@app.get("/productDatas")
-async def get_products_list():
-    datas = await get_productdetial_list()
-    return (datas)
-
-@app.get("/getGoodsDatas")
-async def get_goods_list():
-    datas = await get_progoods_list()
-    return (datas)
+# @app.get("/sendtestget")
+# async def get_test_get():
+#     datas = await get_progoods_list()
+#     return (datas)
 
 
-#new stock
-@app.post("/addnewStock")
-async def submit_add_stock(request_data: StockItem):
-        city_id = await check_exist_city(request_data.cityId)
-        if city_id == False:
-            # no exist pro id , add new project
-            cityid = await inter_new_stockcity(request_data)
-        else:
-            cityid = False
-            logger.warn("--- **** pro is exist !!  **** ---")
-        return (cityid)
-
-@app.post("/submitProjects")
-async def submit_new_project(request_data: ProItem):
-        proid = await inter_new_pro(request_data)
-        return (proid)
-
-@app.post("/addnewGoods")
-async def submit_new_goods(request_data: GoodsItem):
-        goods_id = await check_exist_goodsname(request_data.name)
-        if goods_id == False:
-            # no exist pro id , add new project
-            goodsid = await inter_new_goods(request_data)
-        else:
-            goodsid = False
-            logger.warn("--- **** pro is exist !!  **** ---")
-        
-        return (goodsid)
-
-# @app.post("/getMaxStock")
-# async def get_max_stocks(request_data: MaxStockItem):
-#         max_stock = await get_one_goods_stock_num(request_data.city, request_data.sid)
-#         return (max_stock)
-
-@app.post("/sendlistenclick")
-async def send_listen_click(request_data: SendListernClickDatas):
-        logger.warn("get send test api start ")
-        logger.warn(request_data)
-        return (request_data)
-
-@app.post("/sendlistenchange")
-async def send_listen_chang(request_data: SendListernChangeDatas):
-        logger.warn("get send test api start ")
-        changed_id = await inter_listener_user_datas_change(request_data)
-        return (changed_id)
-
-@app.get("/getlistenhostname")
-async def get_listener_hostname():
-    datas = await get_listener_host()
-    return (datas)
+#creat a new user
+async def inter_new_user(datas):
+    conn = await connect_to_db()
+    cursor = conn.cursor()
+    sql = "insert into USERS_T_CHAT (NICK_NAME,PASS_WORD_T_CHAT, PHONE) \
+             values(%s, %s, %s) RETURNING id"
+    params = (datas.get('username'),datas.get('password') ,datas.get('phone'))      
+    cursor.execute(sql, params)
+    user_id = cursor.fetchone()
+    conn.commit()
+    await close_db_connection(conn, cursor)
+    return user_id[0]
 
 
-@app.get("/sendtestget")
-async def get_test_get():
-    datas = await get_progoods_list()
-    return (datas)
+async def validateuser_exists(account):
+    apply_user = ""
+    conn = await connect_to_db()
+    cursor = conn.cursor()
+    sql = "select id from users_t_chat  where nick_name=%s"
+    params = (account, )
+    print (account)
+    cursor.execute(sql, params)
+    while True:
+        data = cursor.fetchone()
+        if data == None:
+            break
+        apply_user = data[0]
+    conn.commit()
+    await close_db_connection(conn, cursor)
+    if apply_user == "":
+        apply_user = False
+    return apply_user
 
-
-@app.post("/submitReport")
-async def send_reportData(request_data: Item):
-        #sumbit the order data
-        # 1 check if the user exist in data base if not create one
-        user_id = await check_exist_user(request_data.clientName, request_data.phone, request_data.user_address['province'][1])
-        if user_id == False:
-           #insert a new user data if this is new user
-           userid = await inter_new_user(request_data)
-        else:
-            userid = user_id
-            logger.warn("--- **** User is exist !!  **** ---")
-        # param: 1: city.
-        # 2 sell stock num
-        max_stock = await get_one_goods_stock_num(request_data.stock_site_city, request_data.goodsType)
-        print(max_stock)
-        if max_stock == False:
-            userid = max_stock
-            stockNum = max_stock
-            stock_num = 0
-            stock_val = 0
-        else:
-            stock_val = int(max_stock) - int(request_data.sells_num)
-            if stock_val >= 0:
-                stockNum = max_stock
-                stock_num = int(max_stock)
-                await inter_order_datas(request_data, userid)
-            else:
-                 userid = False
-                 stockNum = stock_val
-                 stock_num = int(max_stock)
-        result = {
-            "result": userid,
-            "stockNum": stockNum,
-            "stock_num": stock_num,
-            "stock_val": stock_val
-        }
-        return (result)
 
 @app.get("/items/{item_id}")
 def read_item(item_id: int, q: Optional[str] = None):
@@ -490,4 +406,23 @@ class Apihandler():
     async def test():
         re = await get_progoods_list()
         print(re)
-        
+    #get request
+    """
+        post use:
+        async def validateuser(request_data: userName_chat):
+    """
+    async def validateuser(account):
+        responseDatas.status = await validateuser_exists(account)
+        if responseDatas.status == False:
+            responseDatas.message = "User not Exist in System."
+        else:
+            """
+             If the user is exist and check the password for current user.
+             If the user password is not match set the status False.
+            """
+            responseDatas.message = "User is exist in System."
+        responseDatas.account = account
+        return responseDatas
+    async def adduser(request_data: accountDatas):
+        user_id = await inter_new_user(request_data)
+        return user_id

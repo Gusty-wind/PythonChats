@@ -1,3 +1,4 @@
+import re
 import tornado.web
 import tornado.ioloop
 import tornado.httpserver
@@ -17,7 +18,7 @@ from tornado.web import RequestHandler
 from tornado.options import define, options
 from tornado.websocket import WebSocketHandler
 from tornado import gen
-from connection import connect_to_db, close_db_connection
+# from connection import connect_to_db, close_db_connection
 
 
 define("port", default=9008, type="int", help="run in the basic root url")
@@ -27,7 +28,6 @@ summary_users = []
 cookie = base64.b64encode(uuid.uuid4().bytes + uuid.uuid4().bytes)
 
 class IndexHandler(RequestHandler):
-
     def get_current_user(self):
         user = self.get_argument(name='username_cur',default='None')
         if user and user != 'None':
@@ -37,18 +37,17 @@ class IndexHandler(RequestHandler):
     @gen.coroutine
     @tornado.web.authenticated 
     def get(self):
-        print("IndexHandler  GET Request")
+        print("IndexHandler  GET Request", self.current_user)
         self.render("online_index.html",current_user=self.current_user)
-
     @tornado.web.authenticated
     def post(self, *args, **kwargs):
-        # if self.current_user == None:
-        #     self.redirect("/")
-        print(self.current_user, '##############')
         self.render("online_index.html", current_user=self.current_user)
+    def check_origin(self, origin):
+        return True
 
 
 class LoginHandler(RequestHandler):
+
     def get(self, *args, **kwargs):
         cookie_value = self.get_secure_cookie('count')
         print('cookie_value :', cookie_value)
@@ -170,23 +169,60 @@ class ChatHandler(WebSocketHandler):
             u.write_message(obj)
 
     def check_origin(self, origin):
-        #parsed_origin =urllib.parse.urlparse(origin)
-        #return parsed_origin.netloc.endswith(".xxx.com")
         return True
 
-class Test(RequestHandler):
-    #lister the router
-    async def get(self):
-        print("GET !!!!!")
-        await db_sql.Apihandler.test()
-        self.render("register.html", cur_title = '@@@')
+class Validate(RequestHandler):
+    async def checkUserexist(self, account):
+        return await db_sql.Apihandler.validateuser(account)
+
+    async def post(self, *args, **kwargs):
+        """
+            check if the user is exist in the db and psw is correct.
+            response the data the status
+        """
+        exist_user = await self.checkUserexist(self.get_argument('current_user'))
+        result_date =  {
+            'data':{
+                'status':exist_user.status,
+                'message': exist_user.message,
+                'not_exist_account': exist_user.account,
+            }
+        }
+        self.write(result_date)
+
+class RegisterHandler(RequestHandler):
+    async def submiteNewUser(self, accountData):
+        return await db_sql.Apihandler.adduser(accountData)
+
+    @gen.coroutine
+    def get(self, *args, **kwargs):
+        """
+            login in view
+        """
+        self.render('register.html', title=options.title + '--Register')
+        # self.render("online_index.html",current_user= '@@@')
+    async def post(self, *args, **kwargs):
+        print("send request post success !!!!!!!")
+        data = {
+           'username': self.get_argument('current_user'),
+           'password': self.get_argument('password'),
+           'phone': self.get_argument('phone')
+        }
+        inster_user_bool =  await self.submiteNewUser(data)
+        if inster_user_bool != False:
+            data['status'] = True
+        else:
+             data['status'] = False
+        self.write(data)
 
 def main():
     return tornado.web.Application([        
         (r"/", IndexHandler),
         (r"/login", LoginHandler),
         (r"/chat", ChatHandler), 
-        (r"/test", Test),  
+        (r"/validate", Validate), 
+        (r"/register", RegisterHandler), 
+
     ],
     websocket_ping_interval = 5,
     static_path = os.path.join(os.path.dirname(__file__), "static"),           
@@ -196,26 +232,8 @@ def main():
     cookie_secret="2hcicVu+TqShDpfsjMWQLZ0Mkq5NPEWSk9fi0zsSt3A=",
     debug = True,                                                         
     )
-async def get_listener_host():
-    conn = await connect_to_db()
-    cursor = conn.cursor()
-    logger.warn("--- **** DB connect success **** ---")
-    logger.warn("--- **** Start query listern platfrom name **** ---")
-    sql = "select hostname from  listenuserdatas where deleted  = 'false' "
-    cursor.execute(sql)
-    data = cursor.fetchall()
-    conn.commit()
-    await close_db_connection(conn, cursor)
-    logger.warn("--- **** end query listern platfrom name **** ---")
-    return data
 
 async def main_app():
-    # conn = await connect_to_db()
-    # cursor = conn.cursor()
-
-    # datas = await get_listener_host()
-    # print (datas)
-
     app = main()
     app.listen(options.port)
     """

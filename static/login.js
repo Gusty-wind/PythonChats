@@ -21,19 +21,23 @@ $(document).ready(function() {
                 $("#username_cur").removeClass('error_login_style');
             }
         })
+        //  !!!! intercept request and valiate the request 
         $("#conform_username").on('click', () => {
-            if (validateLoginData()) {
+            if (!validateLoginData()) return false;
                 let config = {
-                    url: '/',
-                    // current_user: $("#username_cur")[0].value,
-                    // password: $("#password")[0].value
+                    url: '/validate',
+                    type: 'POST',
+                    current_user: $("#username_cur")[0].value,
+                    password: $("#password")[0].value
                 }
-                // $('form').submit(config);
-                // handleGetRequest(config);
-                return;
-            } else {
-                console.log('account && password not be empty.')
-            }
+                let result = handlePostRequest(config);
+                return result
+            
+        })
+        // link to the regist view
+        $("#register_new").on('click', () => {
+            // !need to change the httpxxx to get url code
+            window.location.href = 'http://localhost:9008/register';
         })
     };
 
@@ -41,39 +45,40 @@ $(document).ready(function() {
         var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
         return r ? r[1] : undefined;
     }
-    const handlePostRequest = (e) => {
-
-    }
-
-    const handleGetRequest = (config) => {
-        // config._xsrf = getCookie("_xsrf");
-        config._xsrf = "2hcicVu+TqShDpfsjMWQLZ0Mkq5NPEWSk9fi0zsSt3B=";
-        $.ajax({
-            type:'POST',
-            url:config.url,
-            data: $.param(config),
-            success: (data)=>{
-
-            },
-            complete: (response) => {
-                console.log(response)
-            },
-            dataType: 'json'
-        })
-        
+  
+     const handlePostRequest = (config) => {
+        config._xsrf = getCookie("_xsrf");
+        let status = false;
+            $.ajax({
+                type:config.type,
+                url:config.url,
+                data: $.param(config),
+                async: false,
+                success: (data)=>{
+                    if (!data.data.status) {
+                        // if response status is false
+                        // send the error message to the view 
+                        console.log(data.data)
+                    }
+                    status =  data.data.status;
+                },
+                dataType: 'json'
+            }) 
+        return status;
     }
 
     const validateLoginData = () => {
+        let login_status = true;
         if ($("#password")[0].value == '' &&  $("#username_cur")[0].value == '') {
             $("#password").addClass('error_login_style');
             $("#username_cur").addClass('error_login_style');
-            return false;
+            login_status = false;
         } else  if ($("#password")[0].value == ''){
             $("#password").addClass('error_login_style');
-            return false;
+            login_status = false;
         } else  if ($("#username_cur")[0].value == '') {
             $("#username_cur").addClass('error_login_style');
-            return false;
+            login_status = false;
         } else {
             if ($("#password").hasClass("error_login_style")) {
                 $("#password").removeClass('error_login_style');
@@ -81,8 +86,8 @@ $(document).ready(function() {
             if ($("#username_cur").hasClass("error_login_style")) {
                 $("#username_cur").removeClass('error_login_style');
             }
-            return true;
         }
+        return login_status;
     }
     document.onreadystatechange = function () {  
         if(document.readyState=="complete") { 

@@ -1,0 +1,35 @@
+# create user table
+CREATE TABLE USERS_T_CHAT(
+   ID serial PRIMARY KEY     NOT NULL,
+   NICK_NAME           varchar(40)    ,
+   PHONE       varchar(30)     ,
+   phone_home  varchar(30),
+   phone_mobile  varchar(30),
+   phone_work  varchar(30),
+   phone_other varchar(30),
+   detailaddress varchar(50),
+   PROVINCE varchar(20),
+   CITY     varchar(20),
+   CITYAREA varchar(20),
+   STREET  varchar(100),
+   firstname varchar(20),
+   lastname varchar(20),
+   create_data varchar (40)  DEFAULT  (now()),
+   deleted  varchar (10) DEFAULT ('false'),
+   is_admin varchar (10) DEFAULT ('false'),
+   is_members varchar (10) DEFAULT ('false'),
+   GROUP_T_CHAT varchar(10),
+   modified_user_id varchar(10),
+   modified_by_name varchar(20),
+   modified_date varchar(40),
+   create_user_id varchar(10),
+   create_by_name varchar(20),
+   usertype varchar(10),
+   sfc_role varchar(10),
+   emailaddress varchar(20),
+   picture varchar(50),
+   PASS_WORD_T_CHAT  varchar(30)
+);
+
+# check user exist
+select id from users_t_chat  where nick_name=%s

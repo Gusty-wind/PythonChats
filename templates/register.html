@@ -1,8 +1,48 @@
-<htm>
-    <head>
-        <title>{{cur_title}}</title>
-    </head>
-    <body>
-        Success thi page
-    </body>
-</htm>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+    <script src="{{static_url('jquery.min.js')}}"></script>
+    <script src="https://lf1-cdn-tos.bytegoofy.com/obj/iconpark/icons_3115_37.193e59fbdf1981bb052333263ce612e6.es5.js"></script>
+    <link rel="icon" type="image/x-icon" href="{{static_url('images/logo_1_2.ico')}}">
+    <script src="{{static_url('register.js')}}"></script>
+    <link rel="shortcut icon" type="image/x-icon" href="{{static_url('images/logo_1_2.ico')}}">
+    <link rel="stylesheet" type="text/css" href="{{static_url('style.css')}}">
+</head>
+<body>
+    <div class="login_container">
+        <div class="wrapper"></div>
+        <div class="wrapper">
+            <div class="log_icon_ifream span-2_login_f">
+                <img  class="login_logo" src="{{static_url('images/logo_2.png')}}">
+            </div>
+        </div>
+        <div class="wrapper">
+            <div class="login_from span-2_login_f">
+                <form action="/" method="POST">
+                    {% module xsrf_form_html() %}
+                    <div id="user_nice_name " class="login_ifream_input">
+                        <iconpark-icon name="user"></iconpark-icon>
+                        <input class="login_input_re" id="username_cur" name="username_cur" placeholder="Config A Nick Name To Chat" autocomplete="off" />
+                    </div>
+                    <div id="user_pass_word" class="login_ifream_input">
+                        <iconpark-icon name="key"></iconpark-icon>
+                        <input class="login_input_re" id="password" name="password"  placeholder=" Please Enter A PassWord." autocomplete="off">
+                        <!-- <iconpark-icon name="preview-open" id="enable_show_psw"></iconpark-icon> -->
+                        <!-- <iconpark-icon name="preview-close-one" id="disable_hide_psw"></iconpark-icon> -->
+                    </div>
+                    <div id="user_pass_word" class="login_ifream_input">
+                        <iconpark-icon name="key"></iconpark-icon>
+                        <input class="login_input_re" id="phone_num" name="phone_num"  placeholder=" Please Enter phone number." autocomplete="off">
+                    </div>
+                    <div id="submit_datas">
+                        <input id="submit_new_user" type="submit" value="Register a new User"  >
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
