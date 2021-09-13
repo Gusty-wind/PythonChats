@@ -129,7 +129,7 @@
     margin: 0.3rem;
 }
 .extend_font_site {
-    text-align: initial;
+    /* text-align: initial; */
     max-width: 200px;
     max-height: 200px;
 }

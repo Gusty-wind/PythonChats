@@ -7,16 +7,16 @@ def get_user_file_name_path (username):
     date = datetime.datetime.now()
     format_dir_name = str(username) + str(date.year)
     file_name = str(username) + '_' + str(date.year) + str(date.month) + str(date.day)
-    path = format_dir_name
-    path_url = path + '/' + file_name + '.txt'
+    path_url = format_dir_name + '/' + file_name + '.txt'
     file_patch_list = {}
-    file_patch_list["path"] =  path
+    file_patch_list["path"] =  format_dir_name
     file_patch_list["path_url"] = path_url
     return file_patch_list
 
 def created_file(filename):
     file_patch_list = get_user_file_name_path(filename)
-
+    # return
+    print(file_patch_list, '##')
     if not os.path.isdir(file_patch_list['path']):
         os.makedirs(file_patch_list['path'])
     if not os.path.isfile(file_patch_list['path_url']):

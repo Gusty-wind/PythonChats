@@ -31,7 +31,7 @@ class IndexHandler(RequestHandler):
     def get_current_user(self):
         user = self.get_argument(name='username_cur',default='None')
         if user and user != 'None':
-            commen.created_file(self)
+            commen.created_file(user)
             print('IndexHandler CLASS get_current_user get current user:',user)
             return user
     @gen.coroutine
@@ -66,6 +66,17 @@ def check_img_msg(cur_str):
         return image_str
     else:
         False
+
+def formatchatdats_xa0(data):
+    def format_self(string_s):
+         data = "".join(string_s.split())
+         return data
+    if (data.find("\\xa0")):
+        data = data.replace("\\xa0", "\xa0")
+        data = format_self(data)
+    elif (data.find("\xa0")):
+        data = format_self(data)
+    return data
 
 class ChatHandler(WebSocketHandler):
     def get_current_user(self):
@@ -108,7 +119,9 @@ class ChatHandler(WebSocketHandler):
                             hh = json.loads(record)
                             # if the message include the image file, do the format fuc
                             ifimge_str =  check_img_msg(hh)
+                            # check if str include of the \xa0
                             if ifimge_str == None:
+                                hh = formatchatdats_xa0(hh)
                                 hh = json.loads(hh)
                                 msg_datas = {
                                     "name": hh['chatFrom'],

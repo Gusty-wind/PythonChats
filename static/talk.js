@@ -218,18 +218,10 @@ $(document).ready(function() {
             }
             ws.send(JSON.stringify(send_history_apply));
         } else { 
-            let inputval = document.getElementsByClassName("emojionearea-editor")[0];
-            let emojiArr = formatEmojiToString(inputval);
-            let msg = inputval.innerText;
-                // trans the html object to string 
-                if (emojiArr.length > 0) {
-                    emojiArr.forEach(emoji => {
-                        msg += emoji.outerHTML
-                    })
-                }
+            let inputval = $(".emojionearea-editor")[0];
             data = {
                 pointer:pointerList,
-                msg:msg
+                msg:inputval.getInnerHTML()
             };
             ws.send(JSON.stringify(data));
             inputval.innerText = '';
