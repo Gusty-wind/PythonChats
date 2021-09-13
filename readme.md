@@ -7,6 +7,21 @@ This project user the python-tornado and db server use the postgres
     # pip install simplejson
     # pip install FastAPI
 
+#Install step
+
+    # necessary app
+
+        #Python3
+        #Docker
+        #postgres
+
+    1. git clone git@github.com:Gusty-wind/PythonChats.git
+    2. Go to PythonChats directory
+    3. run Python3 main.py
+    4. go to web url localhost: 9008
+
+
+
 # postgres 
   Install the postgres by docker
     docker run -d -p 5432:5432 \
