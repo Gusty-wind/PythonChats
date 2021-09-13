@@ -1,48 +1,33 @@
-pip install tornado
-pip install simplejson
-pip install FastAPI
+
+This project user the python-tornado and db server use the postgres
+    front end use the Jquery and emojio.js
+    connect web server and db server user the fast Api.
+# Python
+    # pip install tornado
+    # pip install simplejson
+    # pip install FastAPI
+
 # postgres 
-# remove pip install aiopg
+  Install the postgres by docker
+    docker run -d -p 5432:5432 \
+        --name init-postgres \
+        -e "ALLOW_IP_RANGE=0.0.0.0/0" \
+        -e "POSTGRES_USER=admin" \
+        -e "POSTGRES_PASSWORD=12345678" \
+        -e "PGDATA=/var/lib/postgresql/data/pgdata" \
+        -v pgdata:/var/lib/postgresql/data \
+        postgres
+# Porject Targets
+ 1. User would use it chat to one person whom he/she wanna chat. (finish)
+ 2. Send the image and emojio to others.(finish)
+ 3. User first login must regiser a account (finish)
+    There are login view and register view.
+    1. Check user if exist. check user password active.
+    2. Save a new user data to the DB server.
 
-# pass word 
-pip install bcrypt
+# Future
+    Replace the Jquery to React
+    Maybe would user the mic front end skill.
+    Add video
+    Add send file.
 
-# print word
-pip install markdown
-
-
-    # Create the global connection pool.
-    # async with aiopg.create_pool(
-    #     host=options.db_host,
-    #     port=options.db_port,
-    #     user=options.db_user,
-    #     password=options.db_password,
-    #     dbname=options.db_database,
-    # ) as db:
-    #     app = Application(db)
-    #     app.listen(options.port)
-        # http_server = tornado.httpserver.HTTPServer(app)                                                            
-        # http_server.listen(options.port)
-        # print("😁😁😁😁😁 Start listern DB server !! 😁😁😁😁😁 port:" +str(options.db_port))
-        # In this demo the server will simply run until interrupted
-        # with Ctrl-C, but if you want to shut down more gracefully,
-        # call shutdown_event.set().
-
-    # shutdown_event = tornado.locks.Event()
-    # await shutdown_event.wait()
-
-
-        # app = tornado.web.Application([        
-    #         (r"/", IndexHandler),
-    #         (r"/login", LoginHandler),
-    #         (r"/chat", ChatHandler),  
-    #         (r"/logout", db_server.AuthCreateHandler)     
-    #     ],
-    #     websocket_ping_interval = 5,
-    #     static_path = os.path.join(os.path.dirname(__file__), "static"),           
-    #     template_path = os.path.join(os.path.dirname(__file__), "templates"),
-    #     login_url='/login',                                                                                                               
-    #     xsrf_cookies=True,                                                         
-    #     cookie_secret="2hcicVu+TqShDpfsjMWQLZ0Mkq5NPEWSk9fi0zsSt3A=",
-    #     debug = True,                                                         
-    #     )
