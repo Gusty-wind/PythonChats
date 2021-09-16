@@ -7,10 +7,9 @@ def get_user_file_name_path (username):
     date = datetime.datetime.now()
     format_dir_name = str(username) + str(date.year)
     file_name = str(username) + '_' + str(date.year) + str(date.month) + str(date.day)
-    path_url = format_dir_name + '/' + file_name + '.txt'
     file_patch_list = {}
     file_patch_list["path"] =  format_dir_name
-    file_patch_list["path_url"] = path_url
+    file_patch_list["path_url"] = format_dir_name + '/' + file_name + '.txt'
     return file_patch_list
 
 def created_file(filename):
@@ -19,6 +18,8 @@ def created_file(filename):
     print(file_patch_list, '##')
     if not os.path.isdir(file_patch_list['path']):
         os.makedirs(file_patch_list['path'])
+        image_path = file_patch_list['path'] + '/image'
+        os.makedirs(image_path)
     if not os.path.isfile(file_patch_list['path_url']):
         fd = open(file_patch_list['path_url'], mode="w", encoding="utf-8")
         fd.close()
@@ -26,7 +27,7 @@ def created_file(filename):
     else:
         return file_patch_list['path_url']
 #append data to file
-def file_write_message(filename, message):
+def file_write_message(filename, message, parentNode):
     file_path = created_file(filename)
     if os.path.isfile(file_path):
         with open(file_path, "a+") as file_object:
@@ -54,3 +55,11 @@ def file_read_message(filenames):
             return fileArry
     else:
         print ('No exist file')
+
+def created_image_file():
+    """
+        save the images to the server
+    """
+
+
+    pass

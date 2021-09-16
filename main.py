@@ -3,15 +3,14 @@ import tornado.web
 import tornado.ioloop
 import tornado.httpserver
 import tornado.options
-import os,json
+import os,json,io
 import datetime
 import base64, uuid
 import tornado.escape
 import commen
 import logging
-
 import db_sql
-
+from PIL import Image
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from tornado.web import RequestHandler
@@ -19,7 +18,6 @@ from tornado.options import define, options
 from tornado.websocket import WebSocketHandler
 from tornado import gen
 # from connection import connect_to_db, close_db_connection
-
 
 define("port", default=9008, type="int", help="run in the basic root url")
 define("title", default="Free To Talk !", type="string", help="web title")
@@ -159,10 +157,25 @@ class ChatHandler(WebSocketHandler):
                     "chatFrom": message.get('pointer')['chatFrom'],
                     "flow_single_user": "false"
                 }
+                if len(message.get('imagefile')) > 0:
+                    img_name = message.get('imagefile')[0]['img_name']
+                    img_base64 = message.get('imagefile')[0]['img_tmp_base64']
+                    path = 'Evan2021/image/' + img_name  
+                    """
+                        change the front base64 to python standard by base64
+                    """                  
+                    img_base64 = re.sub('^data:image/.+;base64,', '', img_base64)
+                    """
+                        save image path 
+                    """
+                    imagePath = (path)
+                    
+                    img = Image.open(io.BytesIO(base64.b64decode(img_base64)))
+                    img.save(imagePath, 'jpeg')
 
-                if u._current_user == message.get('pointer')['chatTo'] or  u._current_user == message.get('pointer')['chatFrom']:
+                if u._current_user == message.get('pointer')['chatTo'] or u._current_user == message.get('pointer')['chatFrom']:
                     # create_get_filename = commen.get_user_file_name_path(str(u._current_user))
-                    commen.file_write_message(str(u._current_user), obj)
+                    commen.file_write_message(str(u._current_user), obj, self)
                     # commen.file_read_message(create_get_filename)
                     u.write_message(obj)
 

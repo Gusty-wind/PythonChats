@@ -6,6 +6,8 @@ This project user the python-tornado and db server use the postgres
     # pip install tornado
     # pip install simplejson
     # pip install FastAPI
+    # pip install requests
+    #pip install Pillow
 
 #Install step
 

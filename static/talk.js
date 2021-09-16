@@ -6,9 +6,9 @@ $(document).ready(function() {
     let _golabConfig = new Map([
         ['chatFrom', $("#currnetUser").html().trim()],
         ['chatTo', ''],
-        ['unread_msg_num', {}]
+        ['unread_msg_num', []]
     ]);
-
+    let imageFiles  = [];
     let currentUser = $("#currnetUser").html().trim(),
         send_url = "ws://127.0.0.1:9008/chat?username_cur="+currentUser,
         ws = new WebSocket(send_url);
@@ -32,6 +32,8 @@ $(document).ready(function() {
             // upload type of images 
             this.upload_files = (e) => {
                 let file_ojb = $('.upload_files')[0].files[0];
+                let imageTypes = ['image', 'png', 'jpg', 'gif'];
+                if (!file_ojb.type && imageTypes.includes(file_ojb.type)) return false;                
                 const getObjectUrl = (file) => {
                     let url = null ;
                     if (window.createObjectURL!= undefined) { 
@@ -41,6 +43,20 @@ $(document).ready(function() {
                     } else if (window.webkitURL!= undefined) { 
                         url = window.webkitURL.createObjectURL(file) ;
                     }
+
+                    let upload_img_obj = {
+                        'img_name': file_ojb.name,
+                        'img_type': file_ojb.type,
+                        'img_size': imageTypes.size,
+                        'img_tmp_base64': ''
+                    }
+                    let reader = new FileReader();
+                        reader.readAsDataURL(file)
+                        reader.onload = function() {
+                            upload_img_obj.img_tmp_base64 = reader.result
+                            // console.log(upload_img_obj.img_tmp_base64)
+                        }
+                    imageFiles.push(upload_img_obj);
                     return url ;
                 }
                 // create new image obj and add it to the dom element
@@ -48,8 +64,6 @@ $(document).ready(function() {
                     let img_create = document.createElement("img");
                         img_create.src = getObjectUrl(file_ojb);
                         img_create.className = 'upload_image_style';
-                    // let div_tmp_a = document.createElement('div');
-                    //     div_tmp_a.append(img_create);
                     document.getElementsByClassName("emojionearea-editor")[0].append(img_create);
                 }
             }
@@ -196,7 +210,9 @@ $(document).ready(function() {
             $('.emojionearea-button').before("<div class='action_bar'>"+spen6+"</div>");
             _initListener();
             if (congigDom.get('eventAction') == 'upload') {
-                document.getElementsByClassName('upload_files')[0].addEventListener('change', (e)=>actionClass.upload_files(e));
+                document.getElementsByClassName('upload_files')[0].addEventListener('change', (e)=> {
+                        actionClass.upload_files(e);
+                });
             }
          }   
      }
@@ -221,7 +237,8 @@ $(document).ready(function() {
             let inputval = $(".emojionearea-editor")[0];
             data = {
                 pointer:pointerList,
-                msg:inputval.getInnerHTML()
+                msg:inputval.getInnerHTML(),
+                imagefile: imageFiles
             };
             ws.send(JSON.stringify(data));
             inputval.innerText = '';
