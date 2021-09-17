@@ -1,16 +1,15 @@
-import re
 import tornado.web
 import tornado.ioloop
 import tornado.httpserver
 import tornado.options
-import os,json,io
+import os,json
 import datetime
 import base64, uuid
 import tornado.escape
 import commen
 import logging
 import db_sql
-from PIL import Image
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from tornado.web import RequestHandler
@@ -157,22 +156,12 @@ class ChatHandler(WebSocketHandler):
                     "chatFrom": message.get('pointer')['chatFrom'],
                     "flow_single_user": "false"
                 }
+                # store image to server
                 if len(message.get('imagefile')) > 0:
                     img_name = message.get('imagefile')[0]['img_name']
                     img_base64 = message.get('imagefile')[0]['img_tmp_base64']
-                    path = 'Evan2021/image/' + img_name  
-                    """
-                        change the front base64 to python standard by base64
-                    """                  
-                    img_base64 = re.sub('^data:image/.+;base64,', '', img_base64)
-                    """
-                        save image path 
-                    """
-                    imagePath = (path)
-                    
-                    img = Image.open(io.BytesIO(base64.b64decode(img_base64)))
-                    img.save(imagePath, 'jpeg')
-
+                    img_type = message.get('imagefile')[0]['img_type']
+                    commen.stroe_image_to_directory(img_name, img_base64, img_type, u._current_user)
                 if u._current_user == message.get('pointer')['chatTo'] or u._current_user == message.get('pointer')['chatFrom']:
                     # create_get_filename = commen.get_user_file_name_path(str(u._current_user))
                     commen.file_write_message(str(u._current_user), obj, self)

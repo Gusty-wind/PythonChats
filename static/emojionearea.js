@@ -1267,8 +1267,8 @@ document = window.document || {};
         })
 
         .on("@source.change", function() {
-            self.setText(source[sourceValFunc]());
-            trigger('change');
+            // self.setText(source[sourceValFunc]());
+            // trigger('change');
         })
 
         .on("@focus", function() {

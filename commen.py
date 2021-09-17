@@ -1,6 +1,10 @@
-import os,json
+import re
+import os,json, io
+import base64
 import datetime
 from pathlib import Path
+from PIL import Image
+from pydantic.types import FilePath
 #init create new dir and file
 
 def get_user_file_name_path (username):
@@ -63,3 +67,21 @@ def created_image_file():
 
 
     pass
+
+def get_image_store_path(img_name, username):
+    file_path = get_user_file_name_path(username)['path']
+    path = file_path + '/image/' + img_name
+    return path
+def stroe_image_to_directory(img_name, img_base64, img_type, username):
+
+    img_path = get_image_store_path(img_name, username)
+    img_format_type = img_type[img_type.index('/') +1:]
+    """
+        change the front base64 to python standard by base64
+    """                  
+    img_base64 = re.sub('^data:image/.+;base64,', '', img_base64)
+    """
+        save image path
+    """
+    img = Image.open(io.BytesIO(base64.b64decode(img_base64)))
+    img.save(img_path, img_format_type)

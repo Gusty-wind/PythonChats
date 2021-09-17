@@ -1,7 +1,7 @@
 $(document).ready(function() {
     if (!window.console) window.console = {};
     if (!window.console.log) window.console.log = function() {};
-    window.emojioneVersion = "3.1.2";
+    window.cVersion = "3.1.2";
     // setting single user chat config date module
     let _golabConfig = new Map([
         ['chatFrom', $("#currnetUser").html().trim()],
@@ -33,7 +33,7 @@ $(document).ready(function() {
             this.upload_files = (e) => {
                 let file_ojb = $('.upload_files')[0].files[0];
                 let imageTypes = ['image', 'png', 'jpg', 'gif'];
-                if (!file_ojb.type && imageTypes.includes(file_ojb.type)) return false;                
+                if (!file_ojb.type && file_ojb.type !=undefined && imageTypes.includes(file_ojb.type)) return false;                
                 const getObjectUrl = (file) => {
                     let url = null ;
                     if (window.createObjectURL!= undefined) { 
@@ -59,11 +59,17 @@ $(document).ready(function() {
                     imageFiles.push(upload_img_obj);
                     return url ;
                 }
+                // when image not exist display a default image
+                // img_create.onerror = display_default_img(this);
+                const display_default_img = (img)=>{
+                    img.src = './static/images/logo_2.png';
+                    img.onerror = null
+                }
                 // create new image obj and add it to the dom element
                 if (file_ojb.name)  {
                     let img_create = document.createElement("img");
                         img_create.src = getObjectUrl(file_ojb);
-                        img_create.className = 'upload_image_style';
+                        img_create.className = "upload_image_style";
                     document.getElementsByClassName("emojionearea-editor")[0].append(img_create);
                 }
             }
@@ -95,6 +101,7 @@ $(document).ready(function() {
 
     let actionClass = new Actionbar();
 
+    // emojio config
     $("#msg").emojioneArea({
         autoHideFilters: true,
         pickerPosition:'top',
@@ -106,6 +113,13 @@ $(document).ready(function() {
                 let emoji_area = $("#msg").emojioneArea();
                     emoji_area.data("emojioneArea").hidePicker();
             },
+            change: function(e) {
+                // fix bug when blur input . emoji js will clear the input content
+                let emoji_area_edito = $('.emojionearea-editor');
+                if (emoji_area_edito.children().length > 0) {
+                    return;
+                }
+            },
         }
     });
 
@@ -116,7 +130,7 @@ $(document).ready(function() {
     let right = document.getElementById("chat_iframe");
     let box = document.getElementById("content_box");
     resize.onmousedown = function(e){
-
+        //Drag and drop chat area
         var startX = e.clientX;
         resize.left = resize.offsetLeft;
 
@@ -218,7 +232,11 @@ $(document).ready(function() {
      }
 
     const sendMsg = (flow_user = false) => {
-        if (_golabConfig.get('chatTo') == '') return;
+        if (_golabConfig.get('chatTo') == '') {
+            alert("必须选取一个联系人开始聊天.")
+            clear_cache_data_modules();
+            return;
+        }
         // click the flow user
         let pointerList = {
             "chatFrom": _golabConfig.get('chatFrom'),
@@ -241,9 +259,18 @@ $(document).ready(function() {
                 imagefile: imageFiles
             };
             ws.send(JSON.stringify(data));
-            inputval.innerText = '';
+            clear_cache_data_modules();
         }
     }
+
+    const clear_cache_data_modules = () => {
+        let inputval = $(".emojionearea-editor")[0];
+            inputval.innerText = '';
+            // clear the image cache
+            imageFiles = [];
+    }
+
+
     // for chinese word trans
     String.prototype.getBytes = function() {       
         let cArr = this.match(/[^\x00-\xff]/ig);       
@@ -312,7 +339,7 @@ $(document).ready(function() {
         });
     }
 
-    // un -read message numbers
+    // un-read message numbers
     const get_unread_msg_number = (unread_user) => {
         let unread_msg_obj = _golabConfig.get('unread_msg_num');
         if (Object.keys(unread_msg_obj).includes(unread_user)) {
